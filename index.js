@@ -1,17 +1,34 @@
+window.onload = criarSound();
 var quadro = document.getElementById("app");
 var lapis = quadro.getContext("2d");
 document.addEventListener("keydown", setDirection)
 var player1 = {
-    posicaoX: 0,
-    posicaoY: 0,
-    size: 10,
+    size: 10 / 2,
+    posicaoX: 5,
+    posicaoY: 5,
     cor: "#000000"
 }
 var player2 = {
-    posicaoX: quadro.width,
-    posicaoY: quadro.height,
     size: 10,
+    posicaoX: quadro.width - 10,
+    posicaoY: quadro.height - 10,
     cor: "#000000"
+}
+desenhar();
+
+function criarSound() {
+    let som = document.createElement("audio");
+    som.src = "./asserts/bulletimpact.mp3";
+    som.setAttribute("id", "som")
+    som.setAttribute("preload", "auto");
+    som.setAttribute("controls", "none");
+    som.style.display = "none";
+    document.body.appendChild(som);
+}
+
+function sound() {
+    let som = document.getElementById("som");
+    som.play();
 }
 
 function setDirection(event) {
@@ -56,6 +73,31 @@ function setDirection(event) {
             break
     }
     requestAnimationFrame(desenhar);
+    if (detectColision() < 1300) {
+        sound();
+    }
+}
+
+function detectColision() {
+    lat1 = player1.posicaoX
+    lat2 = player2.posicaoX
+    lon1 = player1.posicaoY
+    lon2 = player2.posicaoY
+
+    rad = function(x) { return x * Math.PI / 180; }
+
+    //Raio da Terra no km (WGS84)
+    R = 6378.137;
+    // Distância latitudinal
+    dLat = rad(lat2 - lat1);
+    // Distância longitudinal
+    dLong = rad(lon2 - lon1);
+
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+
+    return d.toFixed(3);
 }
 
 function desenhar() {
@@ -73,4 +115,9 @@ function desenhar() {
     lapis.strokeStyle = player2.cor;
     lapis.rect(player2.posicaoX, player2.posicaoY, player2.size, player2.size);
     lapis.stroke();
+    // Desenhando o debug de posicionamentos
+    lapis.font = "8px Arial";
+    lapis.fillStyle = "black";
+    lapis.textAlign = "center";
+    lapis.fillText(`Colisão: ${detectColision()}`, quadro.width / 2, quadro.height);
 }
