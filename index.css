@@ -1,21 +1,16 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
 canvas {
-    width: 400px;
-    height: 400px;
-    border: solid 1px black;
-    image-rendering: optimizeSpeed;
-    /* Older versions of FF          */
-    image-rendering: -moz-crisp-edges;
-    /* FF 6.0+                       */
-    image-rendering: -webkit-optimize-contrast;
-    /* Safari                        */
-    image-rendering: -o-crisp-edges;
-    /* OS X & Windows Opera (12.02+) */
-    image-rendering: pixelated;
-    /* Awesome future-browsers       */
-    -ms-interpolation-mode: nearest-neighbor;
-    /* IE                            */
+  width: 400px;
+  height: 400px;
+  border: solid 1px black;
 }
 
 div {
-    align-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
